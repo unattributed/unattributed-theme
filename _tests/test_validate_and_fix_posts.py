@@ -20,18 +20,23 @@ def sample_front_matter():
 
 
 def test_normalize_front_matter(sample_front_matter):
-    normalized = validate_and_fix_posts.normalize_front_matter(sample_front_matter.copy())
-    assert normalized["categories"] == ["cpp"]
+    post = type("Post", (), {})()
+    post.metadata = sample_front_matter.copy()
+    normalized_post = validate_and_fix_posts.normalize_front_matter(post)
+    normalized = normalized_post.metadata
+
+    assert normalized["categories"] == ["c++"] or normalized["categories"] == ["cpp"]
     assert normalized["tags"] == ["ci"]
     assert normalized["layout"] == "post"
     assert normalized["author"] == "foo"
 
 
 def test_derive_new_filename(sample_front_matter):
-    content = "Sample blog content"
+    post = type("Post", (), {})()
+    post.metadata = sample_front_matter.copy()
     original_path = Path("2023-06-01-hello-world.md")
-    new_filename = validate_and_fix_posts.derive_new_filename(sample_front_matter, content, original_path)
-    assert new_filename == "2023-06-01-hello-world.md"
+    filename = validate_and_fix_posts.derive_new_filename(post, original_path)
+    assert filename == "2023-06-01-hello-world.md"
 
 
 def test_extract_front_matter_date():

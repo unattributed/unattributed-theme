@@ -17,7 +17,7 @@ import sys
 import re
 from pathlib import Path
 from datetime import datetime
-from jekyll_utilities import (
+from _scripts.jekyll_utilities import (
     get_standard_parser,
     load_markdown_files_safe,
     write_markdown_file,
@@ -117,6 +117,11 @@ def main():
         quiet=args.quiet,
         verbose=args.verbose,
     )
+    
+def derive_new_filename(post, original_path):
+    post_date = get_date_from_metadata_or_mtime(post, original_path)
+    clean_name = strip_existing_date_prefix(os.path.basename(original_path))
+    return f"{post_date}-{clean_name}"
 
 if __name__ == "__main__":
     main()
